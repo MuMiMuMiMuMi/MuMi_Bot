@@ -1,0 +1,49 @@
+using Discord;
+using Discord.Commands;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp1
+{
+    class MuMi
+    {
+        DiscordClient discord;
+
+        public MuMi()
+        {
+            discord = new DiscordClient(x =>
+            {
+                x.LogLevel = LogSeverity.Info;
+                x.LogHandler = Log;
+            });
+//定義怎麼呼叫姆咪
+            discord.UsingCommands(x =>
+            {
+                x.PrefixChar = '!';
+                x.AllowMentionPrefix = true;
+            });
+//定義功能
+            var commands = discord.GetService<CommandService>();
+
+            commands.CreateCommand("hello")
+                .Do(async (e) =>
+                {
+                    await e.Channel.SendMessage("姆~咪~");
+                });
+//連線到姆咪
+            discord.ExecuteAndWait(async () =>
+            {
+                await discord.Connect("Mjk3MzI2MzYzNDYyMDc0MzY4.C8KQEg.xGEwWCwp5TxU60CoDioceNi0CDY", TokenType.Bot);
+            });
+        }
+
+        private void Log(object sender, LogMessageEventArgs e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+}
